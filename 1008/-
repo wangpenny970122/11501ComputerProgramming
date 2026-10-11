@@ -1,0 +1,6 @@
+str1 = input("請輸入字串：")
+
+for c in str1:
+    if c.isdigit():
+        continue
+    print(c, end="")
