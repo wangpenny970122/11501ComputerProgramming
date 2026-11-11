@@ -8,7 +8,7 @@ def home():
 
 @app.route("/evan")
 def evan():
-    return "Evan happy birthday!"
+    return render_template("Evan.html")
 
 @app.route("/html_tags")
 def html_tags():
