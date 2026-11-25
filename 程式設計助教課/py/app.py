@@ -1,4 +1,5 @@
 import os
+
 from flask import Flask, render_template, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
@@ -8,10 +9,17 @@ load_dotenv()
 app = Flask(__name__)
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 db = SQLAlchemy(app)
+
+
 class Todo(db.Model):
+    __tablename__ = "todos"
+
     id = db.Column(db.Integer, primary_key=True)
 
     content = db.Column(
@@ -19,20 +27,25 @@ class Todo(db.Model):
         nullable=False
     )
 
+
 with app.app_context():
     db.create_all()
+
 
 @app.route("/")
 def home():
     return render_template("index.html", name="pinhan")
 
+
 @app.route("/evan")
 def evan():
     return render_template("Evan.html")
 
+
 @app.route("/html_tags")
 def html_tags():
     return render_template("html_tags.html")
+
 
 @app.route("/todo")
 def todo():
@@ -43,6 +56,7 @@ def todo():
         "todo.html",
         todos=todos
     )
+
 
 @app.route("/add", methods=["POST"])
 def add_todo():
@@ -59,5 +73,21 @@ def add_todo():
 
     return redirect("/todo")
 
+@app.route("/test")
+def test():
+
+    todo = Todo(content="Hello Database")
+
+    db.session.add(todo)
+
+    db.session.commit()
+
+    return "Success"
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )
